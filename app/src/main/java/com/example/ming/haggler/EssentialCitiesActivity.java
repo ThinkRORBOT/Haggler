@@ -23,14 +23,16 @@ import java.util.Arrays;
 public class EssentialCitiesActivity extends AppCompatActivity {
 
     //initialises the data used
-    public static String[] cities = new String []{
-            "Hong Kong", "Shanghai", "Mumbai", "Delhi", "London", "Paris", "Rome", "Bangkok", "Sydney", "New York"
-    };
+    //public static String[] cities = new String []{
+    //        "Hong Kong", "Shanghai", "Mumbai", "Delhi", "London", "Paris", "Rome", "Bangkok", "Sydney", "New York"
+    //};
     public static  ArrayList<String> citiesTest = new ArrayList<String>();
 
     public static int [] cityImages = {
             R.drawable.hongkong, R.drawable.shanghai, R.drawable.mumbai, R.drawable.delhi, R.drawable.london, R.drawable.paris, R.drawable.rome, R.drawable.bangkok, R.drawable.sydney,
             R.drawable.newyork};
+
+    private String cities;
 
     private ListView cityListView;
     private ArrayAdapter<String> listAdapter;
@@ -40,15 +42,23 @@ public class EssentialCitiesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //connects to the database
         MyDataBaseHelper myDB = new MyDataBaseHelper(this);
 
         SQLiteDatabase db = myDB.openDatabase();
 
-
+        //creates a cursor object to contain the data and move to an ArrayList
         Cursor c = db.rawQuery("SELECT CityName FROM City", null);
+        c.moveToFirst();
+        while(!c.isAfterLast()){
+            citiesTest.add(c.getString(c.getColumnIndex("CityName")));
+            c.moveToNext();
+        }
+        c.close();
+        String[] cities = citiesTest.toArray(new String[0]);
         Log.d("MyApp", "cnt:"+c.getCount());
-        //Creates The interface
+        
+        //Creates The interface by initialzing it
         setContentView(R.layout.content_cities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,6 +76,8 @@ public class EssentialCitiesActivity extends AppCompatActivity {
         citiesList.addAll(Arrays.asList(cities));
 
         //listAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, citiesList);
+
+        //creates an adapter to allow a list item to be clicked
 
         cityListView.setAdapter(new CustomAdapter(this, cities, cityImages));
 
