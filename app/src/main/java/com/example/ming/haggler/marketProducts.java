@@ -42,11 +42,12 @@ public class marketProducts extends AppCompatActivity {
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-                //selected = i;
-                //Intent itemIntent = new Intent(marketProducts.this, itemDescription.class);
-                //String s = Integer.toString(i);
-                //itemIntent.putExtra("product", s);
-                //startActivity(itemIntent);
+                selected = i;
+                Intent itemIntent = new Intent(marketProducts.this, ItemDescriptionActivity.class);
+                String s = Integer.toString(i);
+                itemIntent.putExtra("product", s);
+                itemIntent.putExtra("city", value.toString());
+                startActivity(itemIntent);
 
             }
         });

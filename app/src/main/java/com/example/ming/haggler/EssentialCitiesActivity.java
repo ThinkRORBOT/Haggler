@@ -32,7 +32,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
             R.drawable.hongkong, R.drawable.shanghai, R.drawable.mumbai, R.drawable.delhi, R.drawable.london, R.drawable.paris, R.drawable.rome, R.drawable.bangkok, R.drawable.sydney,
             R.drawable.newyork};
 
-    private String cities;
+    private String[] cities;
 
     private ListView cityListView;
     private ArrayAdapter<String> listAdapter;
@@ -55,7 +55,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
             c.moveToNext();
         }
         c.close();
-        String[] cities = citiesTest.toArray(new String[0]);
+        cities = citiesTest.toArray(new String[0]);
         Log.d("MyApp", "cnt:"+c.getCount());
         
         //Creates The interface by initialzing it
@@ -85,6 +85,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                 selected = i;
+                Log.d("MyApp", "Opened");
                 Intent productIntent = new Intent(EssentialCitiesActivity.this, essentialsProducts.class);
                 String s = Integer.toString(i);
                 productIntent.putExtra("city", s);

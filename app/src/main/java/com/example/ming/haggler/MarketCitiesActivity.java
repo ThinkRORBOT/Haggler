@@ -1,6 +1,8 @@
 package com.example.ming.haggler;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,9 +23,14 @@ import java.util.Arrays;
  */
 
 public class MarketCitiesActivity extends AppCompatActivity {
-    public static String[] cities = new String []{
-            "Hong Kong", "Shanghai", "Delhi", "Bangkok"
-    };
+    //public static String[] cities = new String []{
+    //        "Hong Kong", "Shanghai", "Delhi", "Bangkok"
+   // };
+
+    // 1 = kowloon market hong kong
+    // 1 = MBK bangkok
+    //2 = amari plaza discount department store bangkok
+
 
     public static int [] cityImages = {
             R.drawable.hongkong, R.drawable.shanghai, R.drawable.delhi, R.drawable.bangkok};
@@ -32,11 +39,25 @@ public class MarketCitiesActivity extends AppCompatActivity {
     private ArrayAdapter<String> listAdapter;
     private TextView cityTextView;
     private int selected = 0;
-
+    public static  ArrayList<String> citiesTest = new ArrayList<String>();
+    private String[] cities;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Creates The interface
+        MyDataBaseHelper myDB = new MyDataBaseHelper(this);
+
+        SQLiteDatabase db = myDB.openDatabase();
+
+        //creates a cursor object to contain the data and move to an ArrayList
+        Cursor c = db.rawQuery("SELECT CityName FROM City", null);
+        c.moveToFirst();
+        while(!c.isAfterLast()){
+            citiesTest.add(c.getString(c.getColumnIndex("CityName")));
+            c.moveToNext();
+        }
+        c.close();
+        cities = citiesTest.toArray(new String[0]);
         setContentView(R.layout.content_cities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

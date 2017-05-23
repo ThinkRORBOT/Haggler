@@ -17,7 +17,7 @@ import com.example.ming.haggler.MainActivity;
 public class MyDataBaseHelper {
 
     //choose the name of the database;
-    private String DB_NAME = MainActivity.essential ? "essentialProducts.db" : "marketProducts.db";
+    private String DB_NAME = MainActivity.essential ? "essentialProducts.db" : "marketProducts";
 
     private Context context;
 

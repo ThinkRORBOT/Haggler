@@ -35,7 +35,8 @@
         <activity android:name=".marketProducts" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity android:name=".ItemDescriptionActivity"></activity>
     </application>
 
 </manifest>
