@@ -16,8 +16,7 @@ import java.util.Arrays;
 
 public class essentialsProducts extends AppCompatActivity {
     String value;
-    public static String essentialProduct[] = new String[]{};
-    public static int productImages[];
+    //display price of product later on
     public static float price[];
     private ListView productListView;
     private ArrayAdapter<String> listAdapter;
@@ -51,14 +50,20 @@ public class essentialsProducts extends AppCompatActivity {
             productList.add(cProductName.getString(cProductName.getColumnIndex("Title")));
             cProductName.moveToNext();
         }
-        essentialProduct = productList.toArray(new String[0]);
+        String[] essentialProduct = productList.toArray(new String[0]);
 
         //initialises new array to that the strings can be sorted
         //Arrays.sort(essentialProduct);
+        ArrayList<Integer> picList = new ArrayList<>();
+        while(!cProductPic.isAfterLast()){
+            String name = cProductPic.getString(cProductName.getColumnIndex("PicPath"));
+            picList.add(getResources().getIdentifier(name, "drawable", getPackageName()));
+            cProductName.moveToNext();
+
+        }
+        int[] productImages = picList.toArray(new int[0]);
 
         productList.addAll(Arrays.asList(essentialProduct));
-
-
 
         productListView.setAdapter(new ItemsAdapter(this, essentialProduct, productImages, price));
 
