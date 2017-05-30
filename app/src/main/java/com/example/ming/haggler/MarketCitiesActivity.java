@@ -50,8 +50,9 @@ public class MarketCitiesActivity extends AppCompatActivity {
         SQLiteDatabase db = myDB.openDatabase();
 
         //creates a cursor object to contain the data and move to an ArrayList
-        Cursor c = db.rawQuery("SELECT CityName FROM City", null);
+        Cursor c = db.rawQuery("SELECT CityName FROM cities", null);
         c.moveToFirst();
+
         while(!c.isAfterLast()){
             citiesTest.add(c.getString(c.getColumnIndex("CityName")));
             c.moveToNext();

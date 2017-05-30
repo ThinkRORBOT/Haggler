@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class essentialsProducts extends AppCompatActivity {
     String value;
@@ -29,7 +31,8 @@ public class essentialsProducts extends AppCompatActivity {
 
         //gets information from the activity that initiated this activity
         Intent intent = getIntent();
-        value = intent.getStringExtra("key");
+        value = intent.getExtras().getString("city");
+
 
         //initialises ui elements
         productListView = (ListView) findViewById(R.id.essentialsListView);
@@ -42,26 +45,32 @@ public class essentialsProducts extends AppCompatActivity {
         //adds information from database
         SQLiteDatabase db = myDB.openDatabase();
         Cursor cProductName = db.rawQuery("SELECT Title FROM Product", null);
+        cProductName.moveToFirst();
         Cursor cProductPic = db.rawQuery("SELECT PicPath FROM Product", null);
-
+        cProductPic.moveToFirst();
+        Log.d("cnt", "cnt: " + cProductName.getCount());
         ArrayList<String> productList = new ArrayList<String>();
         //converts information from database to an array
         while(!cProductName.isAfterLast()){
             productList.add(cProductName.getString(cProductName.getColumnIndex("Title")));
             cProductName.moveToNext();
         }
+        cProductName.close();
         String[] essentialProduct = productList.toArray(new String[0]);
-
         //initialises new array to that the strings can be sorted
         //Arrays.sort(essentialProduct);
         ArrayList<Integer> picList = new ArrayList<>();
+
         while(!cProductPic.isAfterLast()){
-            String name = cProductPic.getString(cProductName.getColumnIndex("PicPath"));
+            Log.d("MyApp", "Opened");
+            String name = cProductPic.getString(cProductPic.getColumnIndex("PicPath"));
             picList.add(getResources().getIdentifier(name, "drawable", getPackageName()));
-            cProductName.moveToNext();
+            cProductPic.moveToNext();
 
         }
-        int[] productImages = picList.toArray(new int[0]);
+        cProductPic.close();
+
+        Integer[] productImages = picList.toArray(new Integer[0]);
 
         productList.addAll(Arrays.asList(essentialProduct));
 

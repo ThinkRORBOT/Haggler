@@ -1,6 +1,7 @@
 package com.example.ming.haggler;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,11 @@ import android.widget.Toast;
 public class ItemsAdapter extends BaseAdapter {
     String [] result;
     Context context;
-    int [] imageId;
+    Integer [] imageId;
     float [] price;
     private static LayoutInflater inflater=null;
     //Constructors to initialise data depending on the activity that called it
-    public ItemsAdapter(essentialsProducts essentialProductsActivity, String[] products, int[] productImages, float[] price_arr) {
+    public ItemsAdapter(essentialsProducts essentialProductsActivity, String[] products, Integer[] productImages, float[] price_arr) {
 
         result=products;
         context= essentialProductsActivity;
@@ -29,7 +30,7 @@ public class ItemsAdapter extends BaseAdapter {
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-    public ItemsAdapter(marketProducts marketProductsActivity, String[] products, int[] productImages, float[] price_arr) {
+    public ItemsAdapter(marketProducts marketProductsActivity, String[] products, Integer[] productImages, float[] price_arr) {
 
         result=products;
         context= marketProductsActivity;
@@ -76,7 +77,8 @@ public class ItemsAdapter extends BaseAdapter {
         holder.price=(TextView) rowView.findViewById(R.id.productPrice);
         holder.tv.setText(result[position]);
         holder.img.setImageResource(imageId[position]);
-        holder.price.setText(String.valueOf(price[position]));
+        //for when the price is implemented
+        //holder.price.setText(String.valueOf(price[position]));
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

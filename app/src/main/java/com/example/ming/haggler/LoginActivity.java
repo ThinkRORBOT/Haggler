@@ -353,6 +353,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     // Account exists, return true if the password matches.
                     emailExists = true;
                     if (info[1].equals(mPassword)) {
+                        Toast.makeText(getApplication(), "Logged in as " + mEmail, Toast.LENGTH_LONG).show();
                         return true;
                     } else {
                         Toast.makeText(getApplicationContext(), "Invalid Password", Toast.LENGTH_LONG).show();
@@ -368,10 +369,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 FileOutputStream outputStream;
                 //adds the information to output
                 try {
+                    Toast.makeText(getApplicationContext(), "New account created", Toast.LENGTH_LONG).show();
                     outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
                     outputStream.write(userInfo.getBytes());
                     outputStream.close();
-                    Toast.makeText(getApplicationContext(), "New account created", Toast.LENGTH_LONG).show();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

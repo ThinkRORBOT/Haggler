@@ -18,7 +18,7 @@ public class marketProducts extends AppCompatActivity {
     private TextView productTextView;
     private String value;
     public static String marketProducts[];
-    public static int productImages[];
+    public static Integer productImages[];
     public static float price[];
     private int selected;
 

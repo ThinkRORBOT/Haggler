@@ -57,7 +57,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
         c.close();
         cities = citiesTest.toArray(new String[0]);
         Log.d("MyApp", "cnt:"+c.getCount());
-        
+        db.close();
         //Creates The interface by initialzing it
         setContentView(R.layout.content_cities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,7 +85,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                 selected = i;
-                Log.d("MyApp", "Opened");
+
                 Intent productIntent = new Intent(EssentialCitiesActivity.this, essentialsProducts.class);
                 String s = Integer.toString(i);
                 productIntent.putExtra("city", s);
