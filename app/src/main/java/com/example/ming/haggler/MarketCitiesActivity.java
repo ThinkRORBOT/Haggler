@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,21 +45,24 @@ public class MarketCitiesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Creates The interface
+        //creates a new instance to access the database
         MyDataBaseHelper myDB = new MyDataBaseHelper(this);
 
         SQLiteDatabase db = myDB.openDatabase();
 
         //creates a cursor object to contain the data and move to an ArrayList
-        Cursor c = db.rawQuery("SELECT CityName FROM cities", null);
+        Cursor c = db.rawQuery("SELECT cityname FROM cities", null);
         c.moveToFirst();
 
         while(!c.isAfterLast()){
-            citiesTest.add(c.getString(c.getColumnIndex("CityName")));
+            Log.d("Test", "done");
+            citiesTest.add(c.getString(c.getColumnIndex("cityname")));
             c.moveToNext();
         }
         c.close();
         cities = citiesTest.toArray(new String[0]);
+
+        //creates the interface
         setContentView(R.layout.content_cities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -11,6 +11,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.ming.haggler.ItemDescriptionActivity">
 
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_gravity="center"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/ic_launcher" />
+
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
@@ -23,16 +30,7 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/priceView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="118dp"
-        android:id="@+id/descriptionView" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/priceView"
+        android:id="@+id/descriptionView"
         android:layout_below="@+id/titleView"
         android:layout_alignStart="@+id/titleView"
         android:layout_marginTop="84dp"/>
@@ -45,4 +43,13 @@
         android:id="@+id/button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/priceView"
+        android:layout_above="@+id/button"
+        android:layout_alignStart="@+id/descriptionView"
+        android:layout_marginBottom="42dp" />
 </RelativeLayout>

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/essentialsTextView"
-        tools:text="@string/essentials_product"
+        android:text="@string/essentials_product"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="36sp"
         android:fontFamily="sans-serif"

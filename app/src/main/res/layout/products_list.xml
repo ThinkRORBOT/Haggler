@@ -22,7 +22,7 @@
         android:textColor="@android:color/background_light" />
 
     <TextView
-        android:text="TextView"
+        android:text=" "
         android:layout_width="40dp"
         android:layout_height="34dp"
         android:id="@+id/productPrice"

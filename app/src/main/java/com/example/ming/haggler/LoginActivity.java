@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -351,11 +352,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 if (info[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
+                    Log.d("email", "found");
                     emailExists = true;
                     if (info[1].equals(mPassword)) {
+                        Log.d("Password", "passed");
                         Toast.makeText(getApplication(), "Logged in as " + mEmail, Toast.LENGTH_LONG).show();
                         return true;
                     } else {
+                        Log.d("Password", "failed");
                         Toast.makeText(getApplicationContext(), "Invalid Password", Toast.LENGTH_LONG).show();
                         return false;
                     }
@@ -382,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
@@ -391,10 +395,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                finish();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
                 startActivity(intent);
 
-                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
