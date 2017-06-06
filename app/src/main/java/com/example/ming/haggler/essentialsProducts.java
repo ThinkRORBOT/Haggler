@@ -48,7 +48,7 @@ public class essentialsProducts extends AppCompatActivity {
         cProductName.moveToFirst();
         Cursor cProductPic = db.rawQuery("SELECT PicPath FROM Product", null);
         cProductPic.moveToFirst();
-        Log.d("cnt", "cnt: " + cProductName.getCount());
+        //Log.d("cnt", "cnt: " + cProductName.getCount());
         ArrayList<String> productList = new ArrayList<String>();
         //converts information from database to an array
         while(!cProductName.isAfterLast()){

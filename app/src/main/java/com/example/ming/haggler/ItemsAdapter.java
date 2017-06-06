@@ -79,13 +79,7 @@ public class ItemsAdapter extends BaseAdapter {
         holder.img.setImageResource(imageId[position]);
         //for when the price is implemented
         //holder.price.setText(String.valueOf(price[position]));
-        rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
-            }
-        });
+
         return rowView;
     }
 

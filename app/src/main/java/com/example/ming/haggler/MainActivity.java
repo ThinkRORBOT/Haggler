@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private Button essentialsButton;
     private Button marketButton;
     private Button loginButton;
+    private Button helpButton;
     public static boolean essential = false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         essentialsButton = (Button) findViewById(R.id.essentialsButton);
         marketButton = (Button) findViewById(R.id.marketButton);
         loginButton = (Button) findViewById(R.id.loginButton);
-
+        helpButton = (Button) findViewById(R.id.helpButton);
 
     }
 
@@ -53,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void help(View view) {
+        Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
     }
 }

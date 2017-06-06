@@ -56,7 +56,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
         }
         c.close();
         cities = citiesTest.toArray(new String[0]);
-        Log.d("MyApp", "cnt:"+c.getCount());
+        //Log.d("MyApp", "cnt:"+c.getCount());
         db.close();
         //Creates The interface by initialzing it
         setContentView(R.layout.content_cities);

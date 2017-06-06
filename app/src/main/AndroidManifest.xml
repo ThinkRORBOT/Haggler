@@ -36,7 +36,9 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".ItemDescriptionActivity"></activity>
+        <activity android:name=".ItemDescriptionActivity" />
+        <activity android:name=".UpdateInformationActivity" />
+        <activity android:name=".HelpActivity"></activity>
     </application>
 
 </manifest>

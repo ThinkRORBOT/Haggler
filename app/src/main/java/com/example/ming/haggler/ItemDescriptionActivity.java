@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,25 +45,26 @@ public class ItemDescriptionActivity extends AppCompatActivity {
 
         SQLiteDatabase db = myDB.openDatabase();
         //get all the data from the database
-        Cursor cPrice = db.rawQuery("SELECT price FROM cityproduct WHERE cityid = " + cityId + "AND WHERE productid = " + productId, null);
+        Cursor cPrice = db.rawQuery("SELECT Price FROM CityProduct WHERE CityKey = " + city + " AND ProductKey = " + product, null);
         cPrice.moveToFirst();
-        price = cPrice.getString(cPrice.getColumnIndex("price"));
+        price = cPrice.getString(cPrice.getColumnIndex("Price"));
+        Log.d("1", "1");
 
-        Cursor cLowPrice = db.rawQuery("SELECT lowprice FROM cityproduct WHERE cityid = " + cityId + "AND WHERE productid = " + productId, null);
+        Cursor cLowPrice = db.rawQuery("SELECT lowPrice FROM CityProduct WHERE CityKey = " + city + " AND ProductKey = " + product, null);
         cLowPrice.moveToFirst();
-        lowPrice = cLowPrice.getString(cPrice.getColumnIndex("lowprice"));
+        lowPrice = cLowPrice.getString(cLowPrice.getColumnIndex("lowPrice"));
 
-        Cursor cHighPrice = db.rawQuery("SELECT highprice FROM cityproduct WHERE cityid = " + cityId + "AND WHERE productid = " + productId, null);
+        Cursor cHighPrice = db.rawQuery("SELECT highPrice FROM CityProduct WHERE CityKey = " + city + " AND ProductKey = " + product, null);
         cHighPrice.moveToFirst();
-        highPrice = cHighPrice.getString(cHighPrice.getColumnIndex("highprice"));
+        highPrice = cHighPrice.getString(cHighPrice.getColumnIndex("highPrice"));
 
-        Cursor cDescription = db.rawQuery("SELECT description FROM products WHERE id = " + productId, null);
+        Cursor cDescription = db.rawQuery("SELECT Description FROM Product WHERE id = " + product, null);
         cDescription.moveToFirst();
         productDescription = cDescription.getString(cDescription.getColumnIndex("description"));
 
-        Cursor cTitle = db.rawQuery("SELECT title FROM products WHERE id = " + productId, null);
+        Cursor cTitle = db.rawQuery("SELECT Title FROM Product WHERE id = " + product, null);
         cTitle.moveToFirst();
-        productTitle = cTitle.getString(cTitle.getColumnIndex("title"));
+        productTitle = cTitle.getString(cTitle.getColumnIndex("Title"));
 
 
         //initialises the gui and the the data
@@ -89,7 +91,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
             updateButton.setText("Update");
             updateButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Intent updateIntent = new Intent(ItemDescriptionActivity.this, updateInformation.class);
+                    Intent updateIntent = new Intent(ItemDescriptionActivity.this, UpdateInformationActivity.class);
                     updateIntent.putExtra("product", product);
                     updateIntent.putExtra("city", city);
                 }

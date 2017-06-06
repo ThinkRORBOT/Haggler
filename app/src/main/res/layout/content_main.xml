@@ -60,4 +60,12 @@
         android:layout_below="@id/marketButton"
         android:onClick="login"
         />
+    <Button
+        android:text="Help"
+        android:id="@+id/helpButton"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/loginButton"
+        android:onClick="help"
+        />
 </RelativeLayout>

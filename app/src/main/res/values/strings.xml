@@ -18,4 +18,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="DescriptionText4">You can go back to the previous screen by hitting the back button on Android phones.</string>
+    <string name="DescriptionText3">Select the Item for which you want to look up information. In the market city mode, you can upload a new product and it\'s information</string>
+    <string name="DescriptionText2">Then, select the city which you are in/ the item is placed</string>
+    <string name="DescriptionText1">First, select whether you want to look up the products of every day essential items such as milk and bread or look up the price of items in markets.</string>
 </resources>
