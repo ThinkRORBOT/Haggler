@@ -22,18 +22,12 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp"
-        android:id="@+id/titleView" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/descriptionView"
         android:layout_below="@+id/titleView"
-        android:layout_alignStart="@+id/titleView"
-        android:layout_marginTop="84dp"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="84dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"/>
 
     <Button
         android:text="Button"
@@ -49,7 +43,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/priceView"
-        android:layout_above="@+id/button"
+        android:layout_below="@id/descriptionView"
         android:layout_alignStart="@+id/descriptionView"
-        android:layout_marginBottom="42dp" />
+        android:layout_marginTop="90dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/titleView"
+        android:layout_below="@+id/productImage"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="30sp"/>
 </RelativeLayout>

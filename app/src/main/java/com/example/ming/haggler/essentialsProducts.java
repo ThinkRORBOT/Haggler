@@ -81,6 +81,8 @@ public class essentialsProducts extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                 selected = i;
                 Intent itemIntent = new Intent(essentialsProducts.this, ItemDescriptionActivity.class);
+                //Add one to i so the correct item from database is selected
+                i += 1;
                 String s = Integer.toString(i);
                 itemIntent.putExtra("product", s);
                 itemIntent.putExtra("city", value.toString());

@@ -58,22 +58,22 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         cHighPrice.moveToFirst();
         highPrice = cHighPrice.getString(cHighPrice.getColumnIndex("highPrice"));
 
-        Cursor cDescription = db.rawQuery("SELECT Description FROM Product WHERE id = " + product, null);
+        Cursor cDescription = db.rawQuery("SELECT Description FROM Product WHERE ProductKey = " + product, null);
         cDescription.moveToFirst();
-        productDescription = cDescription.getString(cDescription.getColumnIndex("description"));
+        productDescription = cDescription.getString(cDescription.getColumnIndex("Description"));
 
-        Cursor cTitle = db.rawQuery("SELECT Title FROM Product WHERE id = " + product, null);
+        Cursor cTitle = db.rawQuery("SELECT Title FROM Product WHERE ProductKey = " + product, null);
         cTitle.moveToFirst();
         productTitle = cTitle.getString(cTitle.getColumnIndex("Title"));
 
 
         //initialises the gui and the the data
-        Cursor cProductImage = db.rawQuery("SELECT productimage FROM products WHERE id = " + productId, null);
+        Cursor cProductImage = db.rawQuery("SELECT PicPath FROM Product WHERE ProductKey = " + product, null);
         cProductImage.moveToFirst();
-        productImage = cProductImage.getString(cProductImage.getColumnIndex("productimage"));
+        productImage = cProductImage.getString(cProductImage.getColumnIndex("PicPath"));
 
         productImageView = (ImageView) findViewById(R.id.productImage);
-        productImageView.setImageResource(getResources().getIdentifier(price, "drawable", getPackageName()));
+        productImageView.setImageResource(getResources().getIdentifier(productImage, "drawable", getPackageName()));
 
         titleTextView = (TextView) findViewById(R.id.titleView);
         titleTextView.setText(productTitle);
@@ -81,13 +81,13 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         descriptionTextView = (TextView) findViewById(R.id.descriptionView);
         descriptionTextView.setText(productDescription);
 
-        priceTextView = (TextView) findViewById(R.id.titleView);
-        priceTextView.setText("High price: " + highPrice + "Low Price: " + lowPrice + "Recommended Price" + price);
+        priceTextView = (TextView) findViewById(R.id.priceView);
+        priceTextView.setText(" High price: " + highPrice + " Low Price: " + lowPrice + " Recommended Price: " + price);
 
         essentialActivity = MainActivity.essential ? true : false;
-
+        updateButton = (Button) findViewById(R.id.button);
         if (!essentialActivity) {
-            updateButton = (Button) findViewById(R.id.button);
+
             updateButton.setText("Update");
             updateButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -96,6 +96,8 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                     updateIntent.putExtra("city", city);
                 }
             });
+        } else {
+            updateButton.setVisibility(View.GONE);
         }
     }
 }

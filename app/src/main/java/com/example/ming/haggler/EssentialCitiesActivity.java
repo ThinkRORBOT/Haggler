@@ -87,6 +87,8 @@ public class EssentialCitiesActivity extends AppCompatActivity {
                 selected = i;
 
                 Intent productIntent = new Intent(EssentialCitiesActivity.this, essentialsProducts.class);
+                //adds one to item selected to database will select the correct city
+                i += 1;
                 String s = Integer.toString(i);
                 productIntent.putExtra("city", s);
                 startActivity(productIntent);
