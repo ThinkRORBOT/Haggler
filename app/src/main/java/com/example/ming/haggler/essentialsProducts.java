@@ -72,7 +72,7 @@ public class essentialsProducts extends AppCompatActivity {
 
         Integer[] productImages = picList.toArray(new Integer[0]);
 
-        productList.addAll(Arrays.asList(essentialProduct));
+        //productList.addAll(Arrays.asList(essentialProduct));
 
         productListView.setAdapter(new ItemsAdapter(this, essentialProduct, productImages, price));
 

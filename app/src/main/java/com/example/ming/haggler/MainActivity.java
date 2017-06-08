@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean getState(){
         return this.essential;
     }
-
+    //starts login activity
     public void login(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-
+    //starts help activity
     public void help(View view) {
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);

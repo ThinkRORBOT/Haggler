@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,20 +33,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static java.security.AccessController.getContext;
 
 /**
  * A login screen that offers login via email/password.
@@ -348,6 +341,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //tries to read to file
             while(fileScanner.hasNext()) {
                 temp = fileScanner.nextLine();
+                Log.d("username", temp);
                 info = temp.split(":");
 
                 if (info[0].equals(mEmail)) {
@@ -374,6 +368,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //adds the information to output
                 try {
                     Toast.makeText(getApplicationContext(), "New account created", Toast.LENGTH_LONG).show();
+                    Log.d("login" , "tried to output to file");
                     outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
                     outputStream.write(userInfo.getBytes());
                     outputStream.close();

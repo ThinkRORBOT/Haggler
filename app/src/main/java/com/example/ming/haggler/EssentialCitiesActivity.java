@@ -22,10 +22,7 @@ import java.util.Arrays;
 
 public class EssentialCitiesActivity extends AppCompatActivity {
 
-    //initialises the data used
-    //public static String[] cities = new String []{
-    //        "Hong Kong", "Shanghai", "Mumbai", "Delhi", "London", "Paris", "Rome", "Bangkok", "Sydney", "New York"
-    //};
+    //most of the variables used in the module declared
     public static  ArrayList<String> citiesTest = new ArrayList<String>();
 
     public static int [] cityImages = {
@@ -80,7 +77,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
         //creates an adapter to allow a list item to be clicked
 
         cityListView.setAdapter(new CustomAdapter(this, cities, cityImages));
-
+        //detects the item clicked
         cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
@@ -89,6 +86,7 @@ public class EssentialCitiesActivity extends AppCompatActivity {
                 Intent productIntent = new Intent(EssentialCitiesActivity.this, essentialsProducts.class);
                 //adds one to item selected to database will select the correct city
                 i += 1;
+                //adds information so parameters can be passed to the next activity and starts the next activity.
                 String s = Integer.toString(i);
                 productIntent.putExtra("city", s);
                 startActivity(productIntent);

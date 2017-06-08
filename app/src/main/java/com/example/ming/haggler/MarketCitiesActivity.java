@@ -55,7 +55,7 @@ public class MarketCitiesActivity extends AppCompatActivity {
         c.moveToFirst();
 
         while(!c.isAfterLast()){
-            Log.d("Test", "done");
+            //Log.d("Test", "done");
             citiesTest.add(c.getString(c.getColumnIndex("cityname")));
             c.moveToNext();
         }
@@ -88,6 +88,7 @@ public class MarketCitiesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                 selected = i;
                 Intent productIntent = new Intent(MarketCitiesActivity.this, marketProducts.class);
+                i += 1;
                 String s = Integer.toString(i);
                 productIntent.putExtra("city", s);
                 startActivity(productIntent);

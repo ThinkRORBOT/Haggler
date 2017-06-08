@@ -66,6 +66,7 @@ public class CustomAdapter extends BaseAdapter{
         View rowView;
         rowView = inflater.inflate(R.layout.cities_list, null);
         //sets the attributes of holder to values in array
+        //returns a view so it can be used in the list view of the previous object
         holder.tv=(TextView) rowView.findViewById(R.id.textView1);
         holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
         holder.tv.setText(result[position]);
