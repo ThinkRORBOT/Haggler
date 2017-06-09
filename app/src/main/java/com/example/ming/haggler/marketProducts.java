@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ public class marketProducts extends AppCompatActivity {
     // so that the list is off set
     private int selected;
     private ArrayList<String> productList = new ArrayList<String>();
+    private Button newProductButton;
 
 
     @Override
@@ -39,6 +41,7 @@ public class marketProducts extends AppCompatActivity {
 
         Log.d("marketProducts", "opened");
 
+        newProductButton = (Button) findViewById(R.id.updateButton);
         productListView = (ListView) findViewById(R.id.marketListView);
         productTextView = (TextView) findViewById(R.id.marketTextView);
         productTextView.setText("Select Product");
@@ -107,5 +110,11 @@ public class marketProducts extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void newProduct(View view) {
+        Intent newProductIntent = new Intent(marketProducts.this, NewMarketItemActivity.class);
+        newProductIntent.putExtra("city", value.toString());
+        startActivity(newProductIntent);
     }
 }

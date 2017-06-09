@@ -27,10 +27,17 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/marketListView"
-        android:layout_alignParentEnd="true"
         android:layout_below="@+id/marketTextView"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"/>
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Product"
+        android:id="@+id/updateButton"
+        android:onClick="newProduct"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

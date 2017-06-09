@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,9 +34,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -69,24 +77,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private File loginfile;
     private String filename = "logininfo";
     public static String username;
+    private InputStream input;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //tries to create a file
-        loginfile = new File(filename);
-        if(!loginfile.exists()){
-            try {
-                loginfile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
-                // Set up the login form.
+        // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
@@ -318,13 +317,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mEmail;
         private final String mPassword;
         private boolean emailExists = false;
-        private Scanner fileScanner = new Scanner(filename);
-
+        private BufferedReader bufferedReader;
+        private String temp;
 
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+            //tries to create a file from assets folder
+            try {
+                //opens file fo reading
+                FileInputStream fileInputStream = openFileInput(filename);
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                bufferedReader = new BufferedReader(inputStreamReader);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -336,19 +344,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (InterruptedException e) {
                 return false;
             }
-            String temp;
-            String[] info;
             //tries to read to file
-            while(fileScanner.hasNext()) {
-                temp = fileScanner.nextLine();
+            try {
+                temp = bufferedReader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while(temp != null) {
+                String tempArr[] = temp.split(":");
                 Log.d("username", temp);
-                info = temp.split(":");
 
-                if (info[0].equals(mEmail)) {
+
+                if (tempArr[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
                     Log.d("email", "found");
                     emailExists = true;
-                    if (info[1].equals(mPassword)) {
+                    if (tempArr[1].equals(mPassword)) {
                         Log.d("Password", "passed");
                         Toast.makeText(getApplication(), "Logged in as " + mEmail, Toast.LENGTH_LONG).show();
                         return true;
@@ -359,18 +370,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
 
                 }
+                temp = bufferedReader.readLine();
             }
 
 
             if (!emailExists) {
                 String userInfo = mEmail + ":" + mPassword + '\n';
                 FileOutputStream outputStream;
+                OutputStreamWriter outStreamWriter;
                 //adds the information to output
                 try {
                     Toast.makeText(getApplicationContext(), "New account created", Toast.LENGTH_LONG).show();
                     Log.d("login" , "tried to output to file");
-                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-                    outputStream.write(userInfo.getBytes());
+                    outputStream = openFileOutput(filename, MODE_APPEND);
+                    outStreamWriter = new OutputStreamWriter(outputStream);
+
+                    outStreamWriter.append(userInfo);
+                    outStreamWriter.flush();
+
                     outputStream.close();
 
                 } catch (Exception e) {
