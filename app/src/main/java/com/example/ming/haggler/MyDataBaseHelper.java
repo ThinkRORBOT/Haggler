@@ -37,7 +37,7 @@ public class MyDataBaseHelper {
             }
         }
 
-        return SQLiteDatabase.openDatabase(dbFile.getPath(), null, SQLiteDatabase.OPEN_READONLY);
+        return SQLiteDatabase.openDatabase(dbFile.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
     }
     //copies database from directories and then outputs it again to android can use the database
     private void copyDatabase(File dbFile) throws IOException {

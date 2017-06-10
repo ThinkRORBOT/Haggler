@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -319,15 +320,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private boolean emailExists = false;
         private BufferedReader bufferedReader;
         private String temp;
-
+        File file;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+
+            File dir = new File(getFilesDir() + "/haggler");
             //tries to create a file from assets folder
+            if (!dir.exists()) {
+                dir.mkdir();
+                Log.d("directory", "made");
+            }
+            file = new File(dir.getAbsolutePath() + "/userpassword.txt");
+
+            if (!file.exists()){
+                try {
+                    file.createNewFile();
+                    Log.d("created", "new file");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
                 //opens file fo reading
-                FileInputStream fileInputStream = openFileInput(filename);
+                FileInputStream fileInputStream = new FileInputStream(file);
                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
                 bufferedReader = new BufferedReader(inputStreamReader);
             } catch (FileNotFoundException e) {
@@ -370,11 +387,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
 
                 }
-                temp = bufferedReader.readLine();
+                try {
+                    temp = bufferedReader.readLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
-            if (!emailExists) {
+
+
+            if (!emailExists || temp == null) {
                 String userInfo = mEmail + ":" + mPassword + '\n';
                 FileOutputStream outputStream;
                 OutputStreamWriter outStreamWriter;
@@ -382,13 +405,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 try {
                     Toast.makeText(getApplicationContext(), "New account created", Toast.LENGTH_LONG).show();
                     Log.d("login" , "tried to output to file");
-                    outputStream = openFileOutput(filename, MODE_APPEND);
+                    outputStream = new FileOutputStream(file);
                     outStreamWriter = new OutputStreamWriter(outputStream);
 
                     outStreamWriter.append(userInfo);
                     outStreamWriter.flush();
 
                     outputStream.close();
+
+                    return true;
 
                 } catch (Exception e) {
                     e.printStackTrace();

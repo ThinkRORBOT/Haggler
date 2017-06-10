@@ -14,8 +14,6 @@ import android.widget.TextView;
 public class ItemDescriptionActivity extends AppCompatActivity {
     private String city;
     private String product;
-    private int cityId;
-    private int productId;
     private String price;
     private String lowPrice;
     private String highPrice;
@@ -37,8 +35,6 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         city = intent.getStringExtra("city");
         product = intent.getStringExtra("product");
-        cityId = Integer.parseInt(city);
-        productId = Integer.parseInt(product);
 
         //loads a new instance of the database for access
         MyDataBaseHelper myDB = new MyDataBaseHelper(this);
@@ -48,7 +44,6 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         Cursor cPrice = db.rawQuery("SELECT Price FROM CityProduct WHERE CityKey = " + city + " AND ProductKey = " + product, null);
         cPrice.moveToFirst();
         price = cPrice.getString(cPrice.getColumnIndex("Price"));
-        Log.d("1", "1");
 
         Cursor cLowPrice = db.rawQuery("SELECT lowPrice FROM CityProduct WHERE CityKey = " + city + " AND ProductKey = " + product, null);
         cLowPrice.moveToFirst();
@@ -65,16 +60,16 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         Cursor cTitle = db.rawQuery("SELECT Title FROM Product WHERE ProductKey = " + product, null);
         cTitle.moveToFirst();
         productTitle = cTitle.getString(cTitle.getColumnIndex("Title"));
-
-
         //initialises the gui and the the data
+
         Cursor cProductImage = db.rawQuery("SELECT PicPath FROM Product WHERE ProductKey = " + product, null);
-        cProductImage.moveToFirst();
-        productImage = cProductImage.getString(cProductImage.getColumnIndex("PicPath"));
+        if (cProductImage.toString() != "") {
+            cProductImage.moveToFirst();
+            productImage = cProductImage.getString(cProductImage.getColumnIndex("PicPath"));
 
-        productImageView = (ImageView) findViewById(R.id.productImage);
-        productImageView.setImageResource(getResources().getIdentifier(productImage, "drawable", getPackageName()));
-
+            productImageView = (ImageView) findViewById(R.id.productImage);
+            productImageView.setImageResource(getResources().getIdentifier(productImage, "drawable", getPackageName()));
+        }
         titleTextView = (TextView) findViewById(R.id.titleView);
         titleTextView.setText(productTitle);
 
@@ -84,6 +79,8 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         priceTextView = (TextView) findViewById(R.id.priceView);
         priceTextView.setText(" High price: " + highPrice + " Low Price: " + lowPrice + " Recommended Price: " + price);
 
+
+        //hides the button as you can't update price on essential items
         essentialActivity = MainActivity.essential ? true : false;
         updateButton = (Button) findViewById(R.id.button);
         if (!essentialActivity) {

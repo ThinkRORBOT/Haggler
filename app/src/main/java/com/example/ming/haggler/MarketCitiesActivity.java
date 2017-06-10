@@ -61,7 +61,7 @@ public class MarketCitiesActivity extends AppCompatActivity {
         }
         c.close();
         cities = citiesTest.toArray(new String[0]);
-
+        db.close();
         //creates the interface
         setContentView(R.layout.content_cities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

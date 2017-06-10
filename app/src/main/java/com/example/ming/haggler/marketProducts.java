@@ -26,10 +26,11 @@ public class marketProducts extends AppCompatActivity {
     public static float price[];
     private ArrayList<String> productCityCheck = new ArrayList<>();
     // so that the list is off set
-    private int selected;
+    private Integer selected;
     private ArrayList<String> productList = new ArrayList<String>();
     private Button newProductButton;
-
+    public static int i;
+    private ArrayList<Integer> selectedProducts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,6 @@ public class marketProducts extends AppCompatActivity {
 
         Intent intent = getIntent();
         value = intent.getStringExtra("city");
-
-        Log.d("marketProducts", "opened");
 
         newProductButton = (Button) findViewById(R.id.updateButton);
         productListView = (ListView) findViewById(R.id.marketListView);
@@ -51,41 +50,42 @@ public class marketProducts extends AppCompatActivity {
         MyDataBaseHelper myDB = new MyDataBaseHelper(this);
         //adds information from database
         SQLiteDatabase db = myDB.openDatabase();
-        Cursor cProductName = db.rawQuery("SELECT title FROM products", null);
+        Cursor cProductName = db.rawQuery("SELECT Title FROM Product", null);
         cProductName.moveToFirst();
-        Cursor cProductPic = db.rawQuery("SELECT productImage FROM products", null);
+        Cursor cProductPic = db.rawQuery("SELECT PicPath FROM Product", null);
         cProductPic.moveToFirst();
-        Cursor cProductCityCheck = db.rawQuery("SELECT cityid FROM cityproduct", null);
+        Cursor cProductCityCheck = db.rawQuery("SELECT CityKey FROM CityProduct", null);
         cProductCityCheck.moveToFirst();
 
         // off sets the list so the index does not go out of bounds
         productCityCheck.add("0");
         //this is just to check the city the item is present in
         while (!cProductCityCheck.isAfterLast()) {
-            productCityCheck.add(cProductCityCheck.getString(cProductCityCheck.getColumnIndex("cityid")));
+            productCityCheck.add(cProductCityCheck.getString(cProductCityCheck.getColumnIndex("CityKey")));
             cProductCityCheck.moveToNext();
         }
 
-        int i = 1;
+        i = 1;
         while(!cProductName.isAfterLast()){
-            Log.d("app", (productCityCheck.get(i) == value)+"");
-            Log.d(productCityCheck.get(i), value);
             if (!productCityCheck.get(i).equals(value)) {
                 cProductName.moveToNext();
                 i = i + 1;
             } else {
-                productList.add(cProductName.getString(cProductName.getColumnIndex("title")));
+                productList.add(cProductName.getString(cProductName.getColumnIndex("Title")));
                 cProductName.moveToNext();
+                selectedProducts.add(i - 1);
                 i = i + 1;
+                //adds eligible products to the list to eligible products can be selected later on
             }
         }
         marketProducts = productList.toArray(new String[0]);
 
         i = 1;
+        //adds links to pictures to list but don't add if the data does not contain a link to a picture
         ArrayList<Integer> picList = new ArrayList<>();
         while(!cProductPic.isAfterLast()){;
-            if (cProductPic != null || !productCityCheck.get(i).equals(value)) {
-                String name = cProductPic.getString(cProductPic.getColumnIndex("productImage"));
+            if ((cProductPic.toString() == "") && !productCityCheck.get(i).equals(value)) {
+                String name = cProductPic.getString(cProductPic.getColumnIndex("PicPath"));
                 picList.add(getResources().getIdentifier(name, "drawable", getPackageName()));
             } else {
                 picList.add(0);
@@ -98,12 +98,14 @@ public class marketProducts extends AppCompatActivity {
 
         productListView.setAdapter(new ItemsAdapter(this, marketProducts, productImages, price));
 
+        //detects click, launches activity and adds data to activity
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-                selected = i;
+            public void onItemClick(AdapterView<?> adapterView, View view, int w, long l){
+                selected = selectedProducts.get(w);
+                selected += 1;
                 Intent itemIntent = new Intent(marketProducts.this, ItemDescriptionActivity.class);
-                String s = Integer.toString(i);
+                String s = Integer.toString(selected);
                 itemIntent.putExtra("product", s);
                 itemIntent.putExtra("city", value.toString());
                 startActivity(itemIntent);
