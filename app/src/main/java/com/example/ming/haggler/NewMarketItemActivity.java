@@ -33,6 +33,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_market_item);
 
+        //sets the user interface up
         titleText = (TextView) findViewById(R.id.newItemTitle);
         nameTextView = (TextView) findViewById(R.id.nameTextView);
         descriptionTextView = (TextView) findViewById(R.id.descriptionTextView);
@@ -45,6 +46,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
         tilTitle = (TextInputLayout) findViewById(R.id.tilTitle);
         tilPrice = (TextInputLayout) findViewById(R.id.tilePrice);
 
+        //get city from previous activity
         Intent intent = getIntent();
         value = intent.getStringExtra("city");
 
@@ -53,6 +55,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
     }
 
     private boolean checkValidity() {
+        //checks if all the user input is valid, if not valie, show error
         if (nameEditText.getText().toString().matches("")) {
             tilTitle.setError("Need something in this field");
             return false;
@@ -66,8 +69,15 @@ public class NewMarketItemActivity extends AppCompatActivity {
 
         if (nameEditText.getText().toString().length() > 255) {
             tilTitle.setError("Character limit is 255");
+            return false;
         } else if (descriptionEditText.getText().toString().length() > 2000) {
             tilDescription.setError("Character limit is 2000");
+            return false;
+        }
+
+        if(priceEditText.getText().toString().matches("0")) {
+            tilPrice.setError("Price cannot be zero");
+            return false;
         }
 
         return true;
@@ -75,17 +85,18 @@ public class NewMarketItemActivity extends AppCompatActivity {
 
     public void createItem(View view) {
         if (checkValidity()) {
+            //if it is valid assign variables to values from textbox
             Log.d("item", "in");
             String title = nameEditText.getText().toString();
             String description = descriptionEditText.getText().toString();
             Float price = Float.valueOf(priceEditText.getText().toString());
             int productid = marketProducts.i;
-            productid += 1;
             ContentValues content = new ContentValues();
             content.put("Title", title);
             content.put("Description", description);
-            content.put("productid", productid);
-
+            content.put("ProductKey", productid);
+            content.put("PicPath", "");
+            //place values into database
             long newRowId = db.insert("Product", null, content);
 
             ContentValues cityProduct = new ContentValues();
@@ -98,7 +109,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
             cityProduct.put("Price", price);
 
             long newRowId1 = db.insert("CityProduct", null, cityProduct);
-
+            db.close();
             this.finish();
         }
     }

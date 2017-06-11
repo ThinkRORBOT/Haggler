@@ -75,7 +75,7 @@ public class essentialsProducts extends AppCompatActivity {
         //productList.addAll(Arrays.asList(essentialProduct));
 
         productListView.setAdapter(new ItemsAdapter(this, essentialProduct, productImages, price));
-
+        db.close();
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){

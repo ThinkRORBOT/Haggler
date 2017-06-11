@@ -97,7 +97,7 @@ public class marketProducts extends AppCompatActivity {
         productImages = picList.toArray(new Integer[0]);
 
         productListView.setAdapter(new ItemsAdapter(this, marketProducts, productImages, price));
-
+        db.close();
         //detects click, launches activity and adds data to activity
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

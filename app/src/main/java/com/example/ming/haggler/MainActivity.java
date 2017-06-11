@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import static com.example.ming.haggler.R.id.loginButton;
 
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private Button marketButton;
     private Button loginButton;
     private Button helpButton;
+    public static boolean emailSuccess = false;
+    public static boolean accountcreate = false;
     public static boolean essential = false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
         marketButton = (Button) findViewById(R.id.marketButton);
         loginButton = (Button) findViewById(R.id.loginButton);
         helpButton = (Button) findViewById(R.id.helpButton);
+
+        if (emailSuccess) {
+            Toast.makeText(this, "Successfully logged in", Toast.LENGTH_LONG).show();
+            emailSuccess = false;
+        }
+        if (accountcreate) {
+            Toast.makeText(this, "Successfully created account", Toast.LENGTH_LONG).show();
+            accountcreate = false;
+        }
 
     }
 

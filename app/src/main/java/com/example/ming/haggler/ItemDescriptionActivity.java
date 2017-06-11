@@ -83,6 +83,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         //hides the button as you can't update price on essential items
         essentialActivity = MainActivity.essential ? true : false;
         updateButton = (Button) findViewById(R.id.button);
+        db.close();
         if (!essentialActivity) {
 
             updateButton.setText("Update");
@@ -91,6 +92,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                     Intent updateIntent = new Intent(ItemDescriptionActivity.this, UpdateInformationActivity.class);
                     updateIntent.putExtra("product", product);
                     updateIntent.putExtra("city", city);
+                    startActivity(updateIntent);
                 }
             });
         } else {

@@ -218,7 +218,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //to do detect that username and passwork doesn't have character :
-        return password.length() > 6;
+        return password.length() > 6 && password.indexOf(':') == -1;
     }
 
     /**
@@ -352,6 +352,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
 
+        //toasts to indicate to the user whether their login was successful.
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -378,11 +380,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     emailExists = true;
                     if (tempArr[1].equals(mPassword)) {
                         Log.d("Password", "passed");
-                        Toast.makeText(getApplication(), "Logged in as " + mEmail, Toast.LENGTH_LONG).show();
+                        MainActivity.emailSuccess = true;
                         return true;
                     } else {
                         Log.d("Password", "failed");
-                        Toast.makeText(getApplicationContext(), "Invalid Password", Toast.LENGTH_LONG).show();
                         return false;
                     }
 
@@ -403,16 +404,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 OutputStreamWriter outStreamWriter;
                 //adds the information to output
                 try {
-                    Toast.makeText(getApplicationContext(), "New account created", Toast.LENGTH_LONG).show();
                     Log.d("login" , "tried to output to file");
                     outputStream = new FileOutputStream(file);
                     outStreamWriter = new OutputStreamWriter(outputStream);
 
                     outStreamWriter.append(userInfo);
                     outStreamWriter.flush();
-
+                    MainActivity.accountcreate = true;
                     outputStream.close();
-
                     return true;
 
                 } catch (Exception e) {

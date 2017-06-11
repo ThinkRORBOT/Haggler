@@ -67,7 +67,6 @@ public class MarketCitiesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         cityTextView = (TextView) findViewById(R.id.city_textView);
         cityTextView.setText("Select City");
         //Populates the list view item
@@ -82,14 +81,14 @@ public class MarketCitiesActivity extends AppCompatActivity {
         //listAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, citiesList);
 
         cityListView.setAdapter(new CustomAdapter(this, cities, cityImages));
-
         cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-                selected = i;
+            public void onItemClick(AdapterView<?> adapterView, View view, int w, long l){
+                selected = w;
+                Log.d("made", "it");
                 Intent productIntent = new Intent(MarketCitiesActivity.this, marketProducts.class);
-                i += 1;
-                String s = Integer.toString(i);
+                w += 1;
+                String s = Integer.toString(w);
                 productIntent.putExtra("city", s);
                 startActivity(productIntent);
             }
