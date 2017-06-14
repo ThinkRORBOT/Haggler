@@ -27,7 +27,7 @@ public class MarketCitiesActivity extends AppCompatActivity {
     //public static String[] cities = new String []{
     //        "Hong Kong", "Shanghai", "Delhi", "Bangkok"
    // };
-
+    // the market in question as a reference
     // 1 = kowloon market hong kong
     // 1 = MBK bangkok
     //2 = amari plaza discount department store bangkok
@@ -78,14 +78,13 @@ public class MarketCitiesActivity extends AppCompatActivity {
         ArrayList<String> citiesList = new ArrayList<String>();
         citiesList.addAll(Arrays.asList(cities));
 
-        //listAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, citiesList);
-
+        //gets the data into a list view like object
         cityListView.setAdapter(new CustomAdapter(this, cities, cityImages));
+        //detect the item the user has clicked and start the next activity
         cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> adapterView, View view, int w, long l){
                 selected = w;
-                Log.d("made", "it");
                 Intent productIntent = new Intent(MarketCitiesActivity.this, marketProducts.class);
                 w += 1;
                 String s = Integer.toString(w);

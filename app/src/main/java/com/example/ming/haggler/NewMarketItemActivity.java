@@ -19,6 +19,8 @@ public class NewMarketItemActivity extends AppCompatActivity {
     private TextView nameTextView;
     private TextView descriptionTextView;
     private TextView priceTextView;
+    private TextView marketTextView;
+    private EditText marketEditText;
     private EditText nameEditText;
     private EditText descriptionEditText;
     private EditText priceEditText;
@@ -26,6 +28,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
     private TextInputLayout tilDescription;
     private TextInputLayout tilPrice;
     private Button updateButton;
+    private TextInputLayout tilMarket;
     private String value;
     private SQLiteDatabase db;
     @Override
@@ -42,9 +45,12 @@ public class NewMarketItemActivity extends AppCompatActivity {
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         priceEditText = (EditText) findViewById(R.id.priceEditText);
         updateButton = (Button) findViewById(R.id.updateButton);
+        marketTextView = (TextView) findViewById(R.id.marketTextView);
+        marketEditText = (EditText) findViewById(R.id.marketEditText);
         tilDescription = (TextInputLayout) findViewById(R.id.tileDescription);
         tilTitle = (TextInputLayout) findViewById(R.id.tilTitle);
         tilPrice = (TextInputLayout) findViewById(R.id.tilePrice);
+        tilMarket = (TextInputLayout) findViewById(R.id.tilMarket);
 
         //get city from previous activity
         Intent intent = getIntent();
@@ -55,7 +61,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
     }
 
     private boolean checkValidity() {
-        //checks if all the user input is valid, if not valie, show error
+        //checks if all the user input is valid, if not valid, show error
         if (nameEditText.getText().toString().matches("")) {
             tilTitle.setError("Need something in this field");
             return false;
@@ -65,6 +71,8 @@ public class NewMarketItemActivity extends AppCompatActivity {
         } else if (priceEditText.getText().toString().matches("")) {
             tilPrice.setError("Need something in this field");
             return false;
+        } else if (marketEditText.getText().toString().matches("")) {
+            tilMarket.setError("Need something in this field");
         }
 
         if (nameEditText.getText().toString().length() > 255) {
@@ -73,6 +81,8 @@ public class NewMarketItemActivity extends AppCompatActivity {
         } else if (descriptionEditText.getText().toString().length() > 2000) {
             tilDescription.setError("Character limit is 2000");
             return false;
+        } else if (marketEditText.getText().toString().length() > 100) {
+            tilMarket.setError("Character limit is 100");
         }
 
         if(priceEditText.getText().toString().matches("0")) {
@@ -90,6 +100,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
             String title = nameEditText.getText().toString();
             String description = descriptionEditText.getText().toString();
             Float price = Float.valueOf(priceEditText.getText().toString());
+            String market = marketEditText.getText().toString();
             int productid = marketProducts.i;
             ContentValues content = new ContentValues();
             content.put("Title", title);
@@ -107,6 +118,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
             cityProduct.put("lowPrice", price);
             cityProduct.put("highPrice", price);
             cityProduct.put("Price", price);
+            cityProduct.put("market", market);
 
             long newRowId1 = db.insert("CityProduct", null, cityProduct);
             db.close();

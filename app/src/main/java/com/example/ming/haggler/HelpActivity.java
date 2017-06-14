@@ -16,6 +16,8 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+
+        //set up the ui
         titleText = (TextView) findViewById(R.id.textView);
         descriptionText1 = (TextView) findViewById(R.id.descriptionText1);
         descriptionText2 = (TextView) findViewById(R.id.descriptionText2);

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.loginButton);
         helpButton = (Button) findViewById(R.id.helpButton);
 
+        // if the login/ account creation was successful, show the appropriate toast
         if (emailSuccess) {
             Toast.makeText(this, "Successfully logged in", Toast.LENGTH_LONG).show();
             emailSuccess = false;

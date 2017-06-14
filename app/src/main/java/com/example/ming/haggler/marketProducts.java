@@ -37,6 +37,7 @@ public class marketProducts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_market_products);
 
+        //gets information about the city selected from the previos activity
         Intent intent = getIntent();
         value = intent.getStringExtra("city");
 
@@ -59,7 +60,7 @@ public class marketProducts extends AppCompatActivity {
 
         // off sets the list so the index does not go out of bounds
         productCityCheck.add("0");
-        //this is just to check the city the item is present in
+        //this is just to check the city the item is present in, stores in array
         while (!cProductCityCheck.isAfterLast()) {
             productCityCheck.add(cProductCityCheck.getString(cProductCityCheck.getColumnIndex("CityKey")));
             cProductCityCheck.moveToNext();
@@ -67,6 +68,7 @@ public class marketProducts extends AppCompatActivity {
 
         i = 1;
         while(!cProductName.isAfterLast()){
+            // if the cityid of product is not in the previously stored array, skip it, but add to list if the cityid is in the previous array
             if (!productCityCheck.get(i).equals(value)) {
                 cProductName.moveToNext();
                 i = i + 1;

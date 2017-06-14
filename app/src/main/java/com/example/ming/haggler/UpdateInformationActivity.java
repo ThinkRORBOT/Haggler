@@ -88,6 +88,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     }
 
     private boolean getAndUpdateData () {
+        //gets the data from the text input
         userEnteredPrice = Float.valueOf(priceText.getText().toString());
         boolean highPrice = false;
         boolean lowPrice = false;
@@ -115,7 +116,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
         Cursor historicalPriceAndTime = db.rawQuery("SELECT * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
 
         //gets the current time when the user has entered the price
-        enteredTime = (float) Math.round(System.currentTimeMillis() / 1000);
+        enteredTime = (float) Math.round(System.currentTimeMillis() / 1000000);
         historicalPriceAndTime.moveToFirst();
         Log.d("current time", System.currentTimeMillis()+"");
         double[][] priceAndTimeArray = new double[inputNumber][2];
@@ -145,6 +146,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
         ContentValues priceContent = new ContentValues();
 
         priceContent.put("price", recommendedPrice);
+
+        //if the user has entered a new high or low price, change the high and low price in database
         if(highPrice) {
             priceContent.put("highPrice", userEnteredPrice);
         }
@@ -164,8 +167,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
 
         int valueDB = historicalPriceAndTime.getColumnIndex("Price"+newInputNumber);
 
+        //if the columns already exist, don't create new ones
         if (valueDB == -1) {
-            Log.d("Duplicate", "duplicate");
             db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Price"+newInputNumber);
             db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Time"+newInputNumber);
         }

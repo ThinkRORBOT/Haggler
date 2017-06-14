@@ -20,10 +20,14 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     private String productDescription;
     private String productTitle;
     private String productImage;
+    private String numInput;
+    private String marketName;
     private ImageView productImageView;
     private TextView titleTextView;
     private TextView descriptionTextView;
     private TextView priceTextView;
+    private TextView inputNumTextView;
+    private TextView marketTextView;
     private Button updateButton;
     private boolean essentialActivity;
 
@@ -31,6 +35,8 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_description);
+
+        essentialActivity = MainActivity.essential ? true : false;
 
         //gets values passed from previous activities and converts them to ind
         Intent intent = getIntent();
@@ -63,7 +69,28 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         productTitle = cTitle.getString(cTitle.getColumnIndex("Title"));
         //initialises the gui and the the data
 
+        // if the market cities mode was selected, get the input number data as well.
+        if (!essentialActivity) {
+            Cursor cInputNum = db.rawQuery("SELECT inputnumber FROM CityProduct WHERE ProductKey = " + product + " AND CityKey = " + city, null);
+            cInputNum.moveToFirst();
+            numInput = cInputNum.getString(cInputNum.getColumnIndex("inputnumber"));
+
+            inputNumTextView = (TextView) findViewById(R.id.inputNum);
+            inputNumTextView.setText("Input Number: " + numInput);
+
+            Cursor cMarket = db.rawQuery("SELECT market FROM CityProduct WHERE ProductKey = " + product + " AND CityKey = " + city, null);
+            cMarket.moveToFirst();
+            marketName = cMarket.getString(cMarket.getColumnIndex("market"));
+            marketTextView = (TextView) findViewById(R.id.marketName);
+            if (marketName.equals("0")) {
+                marketTextView.setText("Market: N/A");
+            } else {
+                marketTextView.setText("Market: " + marketName);
+            }
+        }
+
         Cursor cProductImage = db.rawQuery("SELECT PicPath FROM Product WHERE ProductKey = " + product, null);
+        //if there is an image to be shown, add it to cursor.
         if (cProductImage.toString() != "") {
             cProductImage.moveToFirst();
             productImage = cProductImage.getString(cProductImage.getColumnIndex("PicPath"));
@@ -78,11 +105,10 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         descriptionTextView.setText(productDescription);
 
         priceTextView = (TextView) findViewById(R.id.priceView);
-        priceTextView.setText(" High price: " + highPrice + " Low Price: " + lowPrice + " Recommended Price: " + price);
+        priceTextView.setText(" High price: " + highPrice + " Low Price: " + lowPrice + "  Recommended Price: " + price);
 
 
         //hides the button as you can't update price on essential items
-        essentialActivity = MainActivity.essential ? true : false;
         updateButton = (Button) findViewById(R.id.button);
         db.close();
         if (!essentialActivity) {
@@ -102,6 +128,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         }
     }
 
+    //if the user has just updated a price, restart the activity so the update price will be shown
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Intent pIntent = getIntent();
