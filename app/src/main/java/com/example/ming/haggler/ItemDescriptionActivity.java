@@ -26,6 +26,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     private TextView priceTextView;
     private Button updateButton;
     private boolean essentialActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,11 +93,21 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                     Intent updateIntent = new Intent(ItemDescriptionActivity.this, UpdateInformationActivity.class);
                     updateIntent.putExtra("product", product);
                     updateIntent.putExtra("city", city);
-                    startActivity(updateIntent);
-                }
+                    startActivityForResult(updateIntent, 1);
+
+                    }
             });
         } else {
             updateButton.setVisibility(View.GONE);
         }
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Intent pIntent = getIntent();
+            this.finish();
+            startActivity(pIntent);
+        }
+    }
+
 }

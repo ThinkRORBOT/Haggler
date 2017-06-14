@@ -3,6 +3,7 @@ package com.example.ming.haggler;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     private String city;
     private SQLiteDatabase db;
     private Float userEnteredPrice;
-    private int enteredTime;
+    private Float enteredTime;
     private Double recommendedPrice;
     private int numInput;
     //converts time from seconds to days
@@ -67,16 +68,17 @@ public class UpdateInformationActivity extends AppCompatActivity {
     }
 
     //algorithm to get the recommended price from the user
-    private double getRecommendedPrice(double pandtArray[][]) {
+    private double getRecommendedPrice(double pandtArray[][], double uEnteredP) {
         double finalPrice = 0;
         long totalweighting = 0;
         double weightedPrice = 0;
         //make the prices have differnt wieghting depending on how recent the user entered the price
-        for(int i = 0; i < pandtArray[0].length; i++) {
-            Log.d("array size", pandtArray[0].length);
+        for(int i = 0; i < pandtArray[0].length - 1; i++) {
             weightedPrice += pandtArray[i][0] * (pandtArray[i][1]/TIMEPASSED);
             totalweighting += pandtArray[i][1]/TIMEPASSED;
         }
+        weightedPrice += uEnteredP * (enteredTime/TIMEPASSED);
+        totalweighting += enteredTime/TIMEPASSED;
 
         //makes sure the final price is in the right format
         DecimalFormat df = new DecimalFormat("#.##");
@@ -85,90 +87,104 @@ public class UpdateInformationActivity extends AppCompatActivity {
         return finalPrice;
     }
 
+    private boolean getAndUpdateData () {
+        userEnteredPrice = Float.valueOf(priceText.getText().toString());
+        boolean highPrice = false;
+        boolean lowPrice = false;
+
+        //gets the relevant values from the database
+        Cursor highPriceCursor = db.rawQuery("SELECT highPrice from CityProduct WHERE ProductKey = " + value + " AND CityKey = "+ city, null );
+        Cursor lowPriceCursor = db.rawQuery("SELECT lowPrice from CityProduct WHERE ProductKey = " + value + " AND CityKey = "+ city, null );
+        Cursor inputNum = db.rawQuery("SELECT inputnumber from CityProduct WHERE ProductKey = " + value + " AND CityKey = " + city, null );
+        highPriceCursor.moveToFirst();
+        lowPriceCursor.moveToFirst();
+        inputNum.moveToFirst();
+        //gets the relevant values from the cursor
+        Float cursorHighPriceV = Float.valueOf(highPriceCursor.getString(highPriceCursor.getColumnIndex("highPrice")));
+        Float cursorLowPriceV = Float.valueOf(lowPriceCursor.getString(lowPriceCursor.getColumnIndex("lowPrice")));
+        int inputNumber = Integer.parseInt(inputNum.getString(inputNum.getColumnIndex("inputnumber")));
+
+        //if the user has entered a new high price or low price, set a flag so that the information is changed
+        if (cursorHighPriceV < userEnteredPrice) {
+            highPrice = true;
+        } else if (cursorLowPriceV > userEnteredPrice) {
+            lowPrice = true;
+        }
+
+
+        Cursor historicalPriceAndTime = db.rawQuery("SELECT * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
+
+        //gets the current time when the user has entered the price
+        enteredTime = (float) Math.round(System.currentTimeMillis() / 1000);
+        historicalPriceAndTime.moveToFirst();
+        Log.d("current time", System.currentTimeMillis()+"");
+        double[][] priceAndTimeArray = new double[inputNumber][2];
+
+        boolean togglePriceTime = true;
+
+        int count = 0;
+                //gets the values from cursor object so the time and price of historical information is passed to 2d array
+        while (count < inputNumber) {
+            String temp = Integer.toString(count + 1);
+            //toggles between storing price and time
+            if (togglePriceTime) {
+                double tempDouble = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Price"+temp));
+                priceAndTimeArray[count][0] = tempDouble;
+                togglePriceTime = false;
+            } else {
+                togglePriceTime = true;
+                priceAndTimeArray[count][1] = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Time"+temp));
+                count += 1;
+            }
+
+        }
+
+        recommendedPrice = getRecommendedPrice(priceAndTimeArray, userEnteredPrice);
+
+        //put information is a datastructure so that the database can be updated
+        ContentValues priceContent = new ContentValues();
+
+        priceContent.put("price", recommendedPrice);
+        if(highPrice) {
+            priceContent.put("highPrice", userEnteredPrice);
+        }
+        if(lowPrice) {
+            priceContent.put("lowPrice", userEnteredPrice);
+        }
+
+        int newInputNumber = inputNumber + 1;
+
+        priceContent.put("inputnumber", newInputNumber);
+
+        db.update("CityProduct", priceContent, "ProductKey="+value+" AND CityKey="+city, null);
+
+        ContentValues productTime = new ContentValues();
+        productTime.put("Price"+newInputNumber, userEnteredPrice);
+        productTime.put("Time"+newInputNumber, enteredTime);
+
+        int valueDB = historicalPriceAndTime.getColumnIndex("Price"+newInputNumber);
+
+        if (valueDB == -1) {
+            Log.d("Duplicate", "duplicate");
+            db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Price"+newInputNumber);
+            db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Time"+newInputNumber);
+        }
+
+        db.update("ProductTime", productTime, "ProductKey="+value+" AND CityKey="+city, null);
+
+        db.close();
+
+        return true;
+    }
+
     //this function runs when the update price is clicked.
     public void updatePrice(View view) {
 
         if (checkPriceValidity()) {
-            userEnteredPrice = Float.valueOf(priceText.getText().toString());
-            boolean highPrice = false;
-            boolean lowPrice = false;
-
-            //gets the relevant values from the database
-            Cursor highPriceCursor = db.rawQuery("SELECT highPrice from CityProduct WHERE ProductKey = " + value + " AND CityKey = "+ city, null );
-            Cursor lowPriceCursor = db.rawQuery("SELECT lowPrice from CityProduct WHERE ProductKey = " + value + " AND CityKey = "+ city, null );
-            Cursor inputNum = db.rawQuery("SELECT inputnumber from CityProduct WHERE ProductKey = " + value + " AND CityKey = " + city, null );
-            highPriceCursor.moveToFirst();
-            lowPriceCursor.moveToFirst();
-            inputNum.moveToFirst();
-            //gets the relevant values from the cursor
-            Float cursorHighPriceV = Float.valueOf(highPriceCursor.getString(highPriceCursor.getColumnIndex("highPrice")));
-            Float cursorLowPriceV = Float.valueOf(lowPriceCursor.getString(lowPriceCursor.getColumnIndex("lowPrice")));
-            int inputNumber = Integer.parseInt(inputNum.getString(inputNum.getColumnIndex("inputnumber")));
-
-            //if the user has entered a new high price or low price, set a flag so that the information is changed
-            if (cursorHighPriceV < userEnteredPrice) {
-                highPrice = true;
-            } else if (cursorLowPriceV > userEnteredPrice) {
-                lowPrice = true;
+            if (getAndUpdateData() == true) {
+                setResult(RESULT_OK);
+                this.finish();
             }
-
-
-
-            Cursor historicalPriceAndTime = db.rawQuery("SELECT * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
-
-            //gets the current time when the user has entered the price
-            enteredTime = (int) System.currentTimeMillis() / 1000;
-            historicalPriceAndTime.moveToFirst();
-
-            double[][] priceAndTimeArray = new double[inputNumber][2];
-
-            boolean togglePriceTime = true;
-
-            int count = 0;
-            //gets the values from cursor object so the time and price of historical information is passed to 2d array
-            while (count < inputNumber) {
-                String temp = Integer.toString(count + 1);
-                //toggles between storing price and time
-                if (togglePriceTime) {
-                    double tempDouble = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Price"+temp));
-                    priceAndTimeArray[count][0] = tempDouble;
-                    togglePriceTime = false;
-                } else {
-                    togglePriceTime = true;
-                    priceAndTimeArray[count][1] = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Time"+temp));
-                    count += 1;
-                }
-
-            }
-
-            recommendedPrice = getRecommendedPrice(priceAndTimeArray);
-
-            //put information is a datastructure so that the database can be updated
-            ContentValues priceContent = new ContentValues();
-
-            priceContent.put("price", recommendedPrice);
-            if(highPrice) {
-                priceContent.put("highPrice", userEnteredPrice);
-            }
-            if(lowPrice) {
-                priceContent.put("lowPrice", userEnteredPrice);
-            }
-            priceContent.put("inputnumber", inputNumber + 1);
-
-            db.update("CityProduct", priceContent, "ProductKey="+value+" AND CityKey="+city, null);
-
-            ContentValues productTime = new ContentValues();
-            productTime.put("price"+inputNumber, userEnteredPrice);
-            productTime.put("time"+inputNumber, enteredTime);
-
-            db.execSQL("ALTER TABLE ProductTime ADD COLUMN" + "price"+inputNumber + "FLOAT");
-            db.execSQL("ALTER TABLE ProductTime ADD COLUMN" + "time"+inputNumber + "INTEGER");
-
-            db.update("ProductTime", productTime, "ProductKey="+value+" AND CityKey="+city, null);
-
-            db.close();
-            this.finish();
-
 
         }
     }

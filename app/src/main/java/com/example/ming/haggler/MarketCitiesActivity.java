@@ -32,15 +32,15 @@ public class MarketCitiesActivity extends AppCompatActivity {
     // 1 = MBK bangkok
     //2 = amari plaza discount department store bangkok
 
-
-    public static int [] cityImages = {
+    //TODO Place these paths into database
+    private int [] cityImages = {
             R.drawable.hongkong, R.drawable.shanghai, R.drawable.delhi, R.drawable.bangkok};
 
     private ListView cityListView;
     private ArrayAdapter<String> listAdapter;
     private TextView cityTextView;
     private int selected = 0;
-    public static  ArrayList<String> citiesTest = new ArrayList<String>();
+    private ArrayList<String> citiesStore = new ArrayList<String>();
     private String[] cities;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +56,11 @@ public class MarketCitiesActivity extends AppCompatActivity {
 
         while(!c.isAfterLast()){
             //Log.d("Test", "done");
-            citiesTest.add(c.getString(c.getColumnIndex("cityname")));
+            citiesStore.add(c.getString(c.getColumnIndex("cityname")));
             c.moveToNext();
         }
         c.close();
-        cities = citiesTest.toArray(new String[0]);
+        cities = citiesStore.toArray(new String[0]);
         db.close();
         //creates the interface
         setContentView(R.layout.content_cities);

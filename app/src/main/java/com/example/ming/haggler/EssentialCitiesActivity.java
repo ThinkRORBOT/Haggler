@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,9 +20,9 @@ import java.util.Arrays;
 public class EssentialCitiesActivity extends AppCompatActivity {
 
     //most of the variables used in the module declared
-    public static  ArrayList<String> citiesTest = new ArrayList<String>();
+    private ArrayList<String> citiesStore = new ArrayList<String>();
 
-    public static int [] cityImages = {
+    private int [] cityImages = {
             R.drawable.hongkong, R.drawable.shanghai, R.drawable.mumbai, R.drawable.delhi, R.drawable.london, R.drawable.paris, R.drawable.rome, R.drawable.bangkok, R.drawable.sydney,
             R.drawable.newyork};
 
@@ -48,11 +45,11 @@ public class EssentialCitiesActivity extends AppCompatActivity {
         Cursor c = db.rawQuery("SELECT CityName FROM City", null);
         c.moveToFirst();
         while(!c.isAfterLast()){
-            citiesTest.add(c.getString(c.getColumnIndex("CityName")));
+            citiesStore.add(c.getString(c.getColumnIndex("CityName")));
             c.moveToNext();
         }
         c.close();
-        cities = citiesTest.toArray(new String[0]);
+        cities = citiesStore.toArray(new String[0]);
         //Log.d("MyApp", "cnt:"+c.getCount());
         db.close();
         //Creates The interface by initialzing it
