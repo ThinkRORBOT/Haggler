@@ -128,4 +128,18 @@
             android:ems="10"
             android:id="@+id/marketEditText" />
     </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/loadimage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Load Image"
+        android:layout_below="@id/tilMarket"
+        android:onClick="selectImage"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/targetImage"/>
 </RelativeLayout>

@@ -12,7 +12,7 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password">This password is too short/Password cannot contain ":"</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
@@ -22,4 +22,6 @@
     <string name="DescriptionText3">Select the Item for which you want to look up information. In the market city mode, you can upload a new product and it\'s information</string>
     <string name="DescriptionText2">Then, select the city which you are in/ the item is placed</string>
     <string name="DescriptionText1">First, select whether you want to look up the products of every day essential items such as milk and bread or look up the price of items in markets.</string>
+    <string name="reputationinfo">Beware you can only create new items once you have reached a certain \'reputation\'. You can gain reputation by contributing prices to items.</string>
+    <string name="title_activity_user_settings">UserSettingsActivity</string>
 </resources>

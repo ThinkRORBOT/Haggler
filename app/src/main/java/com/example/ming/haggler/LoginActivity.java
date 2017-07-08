@@ -79,7 +79,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private String filename = "logininfo";
-    public static String username;
+    public static String username = "";
+    public static int reputation = 1;
+    public static String pass;
     private InputStream input;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -380,7 +382,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     emailExists = true;
                     if (tempArr[1].equals(mPassword)) {
                         Log.d("Password", "passed");
+                        reputation = Integer.parseInt(tempArr[2]);
                         MainActivity.emailSuccess = true;
+                        username = mEmail;
+                        pass = tempArr[1];
+
                         return true;
                     } else {
                         Log.d("Password", "failed");
@@ -399,7 +405,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
             if (!emailExists || temp == null) {
-                String userInfo = mEmail + ":" + mPassword + '\n';
+                String userInfo = mEmail + ":" + mPassword + ":1" + '\n';
                 FileOutputStream outputStream;
                 OutputStreamWriter outStreamWriter;
                 //adds the information to output

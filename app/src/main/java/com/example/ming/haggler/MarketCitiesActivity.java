@@ -3,6 +3,8 @@ package com.example.ming.haggler;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,9 +14,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,6 +53,7 @@ public class MarketCitiesActivity extends AppCompatActivity {
     private int selected = 0;
     private ArrayList<String> citiesStore = new ArrayList<String>();
     private String[] cities;
+    private ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +89,15 @@ public class MarketCitiesActivity extends AppCompatActivity {
 
         ArrayList<String> citiesList = new ArrayList<String>();
         citiesList.addAll(Arrays.asList(cities));
+
+        //Todo: Get file from data base
+        boolean imageExists = false;
+        String filename = null;
+        String localFile = null;
+        if (imageExists) {
+            if (downloadAndSaveFile(filename, localFile));
+
+        }
 
         //gets the data into a list view like object
         cityListView.setAdapter(new CustomAdapter(this, cities, cityImages));
@@ -116,5 +137,44 @@ public class MarketCitiesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Boolean downloadAndSaveFile(String server, int portNumber,
+                                        String user, String password, String filename, File localFile)
+            throws IOException {
+        FTPClient ftp = null;
+
+        try {
+            ftp = new FTPClient();
+            ftp.connect(server, portNumber);
+            Log.d("Connected. Reply: ", ftp.getReplyString());
+
+            ftp.login(user, password);
+            Log.d("Logged in: ", "Loading");
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
+            Log.d("Downloading: ", "test");
+            ftp.enterLocalPassiveMode();
+
+            OutputStream outputStream = null;
+            boolean success = false;
+            try {
+                outputStream = new BufferedOutputStream(new FileOutputStream(
+                        localFile));
+                success = ftp.retrieveFile(filename, outputStream);
+                Bitmap bitmap = BitmapFactory.decodeFile(filename);
+                imageView.setImageBitmap(bitmap);
+            } finally {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+
+            return success;
+        } finally {
+            if (ftp != null) {
+                ftp.logout();
+                ftp.disconnect();
+            }
+        }
     }
 }

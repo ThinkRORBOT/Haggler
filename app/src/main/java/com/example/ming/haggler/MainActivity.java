@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Button marketButton;
     private Button loginButton;
     private Button helpButton;
+    private Button userButton;
     public static boolean emailSuccess = false;
     public static boolean accountcreate = false;
     public static boolean essential = false;
@@ -34,14 +35,18 @@ public class MainActivity extends AppCompatActivity {
         marketButton = (Button) findViewById(R.id.marketButton);
         loginButton = (Button) findViewById(R.id.loginButton);
         helpButton = (Button) findViewById(R.id.helpButton);
+        userButton = (Button) findViewById(R.id.userButton);
 
         // if the login/ account creation was successful, show the appropriate toast
         if (emailSuccess) {
             Toast.makeText(this, "Successfully logged in", Toast.LENGTH_LONG).show();
+            userButton.setText(LoginActivity.username);
             emailSuccess = false;
+
         }
         if (accountcreate) {
             Toast.makeText(this, "Successfully created account", Toast.LENGTH_LONG).show();
+            userButton.setText(LoginActivity.username);
             accountcreate = false;
         }
 
@@ -73,5 +78,14 @@ public class MainActivity extends AppCompatActivity {
     public void help(View view) {
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
+    }
+
+    public void enterUserPage(View view) {
+        if (emailSuccess || accountcreate) {
+            Intent intent = new Intent(this, UserSettingsActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Need to be logged in first", Toast.LENGTH_SHORT).show();
+        }
     }
 }

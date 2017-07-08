@@ -16,6 +16,16 @@
     android:backgroundTint="@android:color/background_dark">
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Logged In"
+        android:id="@+id/userButton"
+        android:layout_alignBottom="@+id/titleTextView"
+        android:layout_alignParentRight="true"
+        android:onClick="enterUserPage"
+        />
+
+    <Button
         android:text="Market Items"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"

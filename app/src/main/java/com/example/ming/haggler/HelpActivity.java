@@ -12,6 +12,7 @@ public class HelpActivity extends AppCompatActivity {
     private TextView descriptionText2;
     private TextView descriptionText3;
     private TextView descriptionText4;
+    private TextView descriptionText5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,5 +24,6 @@ public class HelpActivity extends AppCompatActivity {
         descriptionText2 = (TextView) findViewById(R.id.descriptionText2);
         descriptionText3 = (TextView) findViewById(R.id.descriptionText3);
         descriptionText4 = (TextView) findViewById(R.id.descriptionText4);
+        descriptionText5 = (TextView) findViewById(R.id.descriptionText5);
     }
 }

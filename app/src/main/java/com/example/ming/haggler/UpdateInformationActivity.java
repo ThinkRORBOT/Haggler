@@ -34,6 +34,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     private int numInput;
     //converts time from seconds to days
     private static final int TIMEPASSED = 68400;
+    private int privRep;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
         value = intent.getStringExtra("product");
         city = intent.getStringExtra("city");
 
+        privRep = LoginActivity.reputation;
+
 
     }
 
@@ -64,6 +67,17 @@ public class UpdateInformationActivity extends AppCompatActivity {
             Toast.makeText(this, "Price cannot be zero", Toast.LENGTH_LONG).show();
             return false;
         }
+        if (priceText.getText().toString().matches("")){
+            Toast.makeText(this, "These must be something in the text box", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (LoginActivity.username == "") {
+            Toast.makeText(this, "You must be logged in to change the price", Toast.LENGTH_SHORT).show();
+            return false;
+
+        }
+
         return true;
     }
 
@@ -71,18 +85,22 @@ public class UpdateInformationActivity extends AppCompatActivity {
     private double getRecommendedPrice(double pandtArray[][], double uEnteredP) {
         double finalPrice = 0;
         long totalweighting = 0;
+        float reputationweighting = 0;
         double weightedPrice = 0;
         //make the prices have differnt wieghting depending on how recent the user entered the price
         for(int i = 0; i < pandtArray[0].length - 1; i++) {
-            weightedPrice += pandtArray[i][0] * (pandtArray[i][1]/TIMEPASSED);
+            weightedPrice += pandtArray[i][0] * (pandtArray[i][1]/TIMEPASSED) * ((Math.log(privRep)*Math.log(privRep)+1)*2);
             totalweighting += pandtArray[i][1]/TIMEPASSED;
+            reputationweighting += pandtArray[i][2] * ((Math.log(privRep)*Math.log(privRep)+1)*2);
         }
-        weightedPrice += uEnteredP * (enteredTime/TIMEPASSED);
+        weightedPrice += uEnteredP * (enteredTime/TIMEPASSED) * ((Math.log(privRep)*Math.log(privRep)+1)*2);
         totalweighting += enteredTime/TIMEPASSED;
+        reputationweighting += ((Math.log(privRep)*Math.log(privRep)+1)*2);
 
         //makes sure the final price is in the right format
         DecimalFormat df = new DecimalFormat("#.##");
         finalPrice= weightedPrice/totalweighting;
+        finalPrice /= reputationweighting;
         finalPrice = Float.valueOf(df.format(finalPrice));
         return finalPrice;
     }
@@ -114,6 +132,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
 
 
         Cursor historicalPriceAndTime = db.rawQuery("SELECT * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
+        Cursor userReputation = db.rawQuery("Select * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
 
         //gets the current time when the user has entered the price
         enteredTime = (float) Math.round(System.currentTimeMillis() / 1000000);
@@ -121,20 +140,25 @@ public class UpdateInformationActivity extends AppCompatActivity {
         Log.d("current time", System.currentTimeMillis()+"");
         double[][] priceAndTimeArray = new double[inputNumber][2];
 
-        boolean togglePriceTime = true;
+        int togglePriceTime = 1;
 
         int count = 0;
                 //gets the values from cursor object so the time and price of historical information is passed to 2d array
         while (count < inputNumber) {
             String temp = Integer.toString(count + 1);
             //toggles between storing price and time
-            if (togglePriceTime) {
+            if (togglePriceTime == 1) {
                 double tempDouble = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Price"+temp));
                 priceAndTimeArray[count][0] = tempDouble;
-                togglePriceTime = false;
-            } else {
-                togglePriceTime = true;
+                togglePriceTime++;
+            } else if (togglePriceTime == 2) {
+                togglePriceTime++;
                 priceAndTimeArray[count][1] = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Time"+temp));
+                togglePriceTime++;
+            } else {
+                togglePriceTime = 1;
+
+                priceAndTimeArray[count][2] = historicalPriceAndTime.getInt(historicalPriceAndTime.getColumnIndex("Reputation"+temp));
                 count += 1;
             }
 
@@ -164,6 +188,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
         ContentValues productTime = new ContentValues();
         productTime.put("Price"+newInputNumber, userEnteredPrice);
         productTime.put("Time"+newInputNumber, enteredTime);
+        productTime.put("Reputation"+newInputNumber, privRep);
 
         int valueDB = historicalPriceAndTime.getColumnIndex("Price"+newInputNumber);
 
@@ -171,9 +196,14 @@ public class UpdateInformationActivity extends AppCompatActivity {
         if (valueDB == -1) {
             db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Price"+newInputNumber);
             db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Time"+newInputNumber);
+            db.execSQL("ALTER TABLE ProductTime ADD COLUMN " + "Reputation"+newInputNumber);
         }
 
         db.update("ProductTime", productTime, "ProductKey="+value+" AND CityKey="+city, null);
+
+        privRep += 1;
+        ChangeUserSetting changeRep = new ChangeUserSetting();
+        changeRep.changeReputation(privRep);
 
         db.close();
 

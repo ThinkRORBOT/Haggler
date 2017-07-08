@@ -119,6 +119,15 @@ public class marketProducts extends AppCompatActivity {
     public void newProduct(View view) {
         Intent newProductIntent = new Intent(marketProducts.this, NewMarketItemActivity.class);
         newProductIntent.putExtra("city", value.toString());
-        startActivity(newProductIntent);
+        startActivityForResult(newProductIntent, 2);
+    }
+
+    //if the user has just created a new product, restart the activity so that the product will be shown
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Intent pIntent = getIntent();
+            this.finish();
+            startActivity(pIntent);
+        }
     }
 }
