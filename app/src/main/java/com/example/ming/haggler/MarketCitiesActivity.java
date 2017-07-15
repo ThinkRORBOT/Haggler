@@ -95,7 +95,7 @@ public class MarketCitiesActivity extends AppCompatActivity {
         String filename = null;
         String localFile = null;
         if (imageExists) {
-            if (downloadAndSaveFile(filename, localFile));
+            //if (downloadAndSaveFile(filename, localFile));
 
         }
 

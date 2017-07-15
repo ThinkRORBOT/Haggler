@@ -41,13 +41,12 @@ public class MainActivity extends AppCompatActivity {
         if (emailSuccess) {
             Toast.makeText(this, "Successfully logged in", Toast.LENGTH_LONG).show();
             userButton.setText(LoginActivity.username);
-            emailSuccess = false;
 
         }
         if (accountcreate) {
             Toast.makeText(this, "Successfully created account", Toast.LENGTH_LONG).show();
             userButton.setText(LoginActivity.username);
-            accountcreate = false;
+
         }
 
     }

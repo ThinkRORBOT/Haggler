@@ -48,6 +48,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -341,6 +342,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     file.createNewFile();
                     Log.d("created", "new file");
                 } catch (IOException e) {
+                    //Toast.makeText(getApplicationContext(), "Please ensure the app has the right permissions. Reinstall app if problems persist.", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }
@@ -350,6 +352,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
                 bufferedReader = new BufferedReader(inputStreamReader);
             } catch (FileNotFoundException e) {
+                //Toast.makeText(getApplicationContext(), "Please ensure the app has the right permissions. Reinstall app if problems persist.", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
@@ -418,6 +421,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     outStreamWriter.flush();
                     MainActivity.accountcreate = true;
                     outputStream.close();
+                    username=mEmail;
+                    reputation=1;
                     return true;
 
                 } catch (Exception e) {

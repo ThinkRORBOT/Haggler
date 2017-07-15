@@ -135,7 +135,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
         return true;
     }
 
-    public void createItem(View view) {
+    public void createItem(View view) throws IOException {
         if (checkValidity()) {
             //if it is valid assign variables to values from textbox
             Log.d("item", "in");
@@ -181,11 +181,15 @@ public class NewMarketItemActivity extends AppCompatActivity {
     }
 
     //uploads image to http server
-    private void uploadImage() {
+    private void uploadImage() throws IOException {
         //ToDo: Store file location in database
         SimpleFTP ftp = new SimpleFTP();
         // Connect to an FTP server on port 21.
-        ftp.connect("server address", 21, "username", "pwd");
+        try {
+            ftp.connect("server address", 21, "username", "pwd");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Set binary mode.
         ftp.bin();
