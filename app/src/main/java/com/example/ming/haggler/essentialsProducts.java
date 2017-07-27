@@ -19,7 +19,7 @@ import java.util.List;
 public class essentialsProducts extends AppCompatActivity {
     String value;
     //display price of product later on
-    public static float price[];
+    private float price[];
     private ListView productListView;
     private ArrayAdapter<String> listAdapter;
     private TextView productTextView;

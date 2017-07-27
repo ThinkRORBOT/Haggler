@@ -88,16 +88,16 @@ public class UpdateInformationActivity extends AppCompatActivity {
         float reputationweighting = 0;
         double weightedPrice = 0;
         //make the prices have differnt wieghting depending on how recent the user entered the price
-        for(int i = 0; i < pandtArray[0].length - 1; i++) {
+        for(int i = 0; i < pandtArray.length - 1; i++) {
             weightedPrice += pandtArray[i][0] * (pandtArray[i][1]/TIMEPASSED) * ((Math.log(privRep)*Math.log(privRep)+1)*2);
             totalweighting += pandtArray[i][1]/TIMEPASSED;
             reputationweighting += pandtArray[i][2] * ((Math.log(privRep)*Math.log(privRep)+1)*2);
+
         }
         weightedPrice += uEnteredP * (enteredTime/TIMEPASSED) * ((Math.log(privRep)*Math.log(privRep)+1)*2);
         totalweighting += enteredTime/TIMEPASSED;
         reputationweighting += ((Math.log(privRep)*Math.log(privRep)+1)*2);
 
-        Log.d("reputation weighting", reputationweighting+"");
         //makes sure the final price is in the right format
         DecimalFormat df = new DecimalFormat("#.##");
         finalPrice= weightedPrice/totalweighting;
@@ -133,13 +133,12 @@ public class UpdateInformationActivity extends AppCompatActivity {
 
 
         Cursor historicalPriceAndTime = db.rawQuery("SELECT * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
-        Cursor userReputation = db.rawQuery("Select * FROM ProductTime WHERE ProductKey = " + value + " AND CityKey = " + city, null);
 
         //gets the current time when the user has entered the price
         enteredTime = (float) Math.round(System.currentTimeMillis() / 1000000);
         historicalPriceAndTime.moveToFirst();
         Log.d("current time", System.currentTimeMillis()+"");
-        double[][] priceAndTimeArray = new double[inputNumber][2];
+        double[][] priceAndTimeArray = new double[inputNumber][3];
 
         int togglePriceTime = 1;
 
@@ -158,8 +157,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                 togglePriceTime++;
             } else {
                 togglePriceTime = 1;
-
-                priceAndTimeArray[count][2] = historicalPriceAndTime.getInt(historicalPriceAndTime.getColumnIndex("Reputation"+temp));
+                priceAndTimeArray[count][2] = historicalPriceAndTime.getDouble(historicalPriceAndTime.getColumnIndex("Reputation"+temp));
                 count += 1;
             }
 
