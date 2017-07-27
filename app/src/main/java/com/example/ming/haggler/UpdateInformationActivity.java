@@ -97,6 +97,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
         totalweighting += enteredTime/TIMEPASSED;
         reputationweighting += ((Math.log(privRep)*Math.log(privRep)+1)*2);
 
+        Log.d("reputation weighting", reputationweighting+"");
         //makes sure the final price is in the right format
         DecimalFormat df = new DecimalFormat("#.##");
         finalPrice= weightedPrice/totalweighting;

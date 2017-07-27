@@ -1,6 +1,9 @@
 package com.example.ming.haggler;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -137,6 +140,29 @@ public class NewMarketItemActivity extends AppCompatActivity {
 
     public void createItem(View view) throws IOException {
         if (checkValidity()) {
+
+            //if image was selected check if image can be uploaded
+            if (imageSelected) {
+                if (!uploadImage()){
+                    AlertDialog alertDialog = new AlertDialog.Builder(NewMarketItemActivity.this).create();
+                    alertDialog.setTitle("Cannot connect to ftp");
+                    alertDialog.setMessage("Do you want to upload information without images?");
+                    alertDialog.setButton(Dialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                }
+
+            }
+
             //if it is valid assign variables to values from textbox
             Log.d("item", "in");
             String title = nameEditText.getText().toString();
@@ -166,9 +192,6 @@ public class NewMarketItemActivity extends AppCompatActivity {
             db.close();
             setResult(RESULT_OK);
 
-            if (imageSelected) {
-                uploadImage();
-            }
 
             privRep += 1;
             if (!LoginActivity.username.matches("")) {
@@ -181,7 +204,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
     }
 
     //uploads image to http server
-    private void uploadImage() throws IOException {
+    private boolean uploadImage() throws IOException {
         //ToDo: Store file location in database
         SimpleFTP ftp = new SimpleFTP();
         // Connect to an FTP server on port 21.
@@ -189,6 +212,7 @@ public class NewMarketItemActivity extends AppCompatActivity {
             ftp.connect("server address", 21, "username", "pwd");
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
 
         // Set binary mode.
@@ -204,6 +228,8 @@ public class NewMarketItemActivity extends AppCompatActivity {
 
         // Quit from the FTP server.
         ftp.disconnect();
+
+        return true;
     }
 
     public void selectImage(View view) {
